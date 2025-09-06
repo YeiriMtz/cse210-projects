@@ -6,16 +6,24 @@ class Program
     {
         Console.WriteLine("");
 
-        // USER SETS MAGIC NUMBER
-        Console.Write("Set the magic number: ");
-        string set_number = Console.ReadLine();
+        // CODE IF USER SETS MAGIC NUMBER 👇🏼
+        // Console.Write("Set the magic number: ");
+        // string set_number = Console.ReadLine();
+
+        // RANDOM MAGIC NUMBER 👇🏼
+        Random randomGenerator = new Random();
+        int magic_number = randomGenerator.Next(1, 101);
+
+        Console.WriteLine("Guess the random magic number 😜");
+        Console.WriteLine("");
+
         // USER GUESSES THE NUMBER
         Console.Write("What is your guess? ");
         string guessing = Console.ReadLine();
 
         // CONVERTING INPUT INTO NUMBERS
-        int magic_number = int.Parse(set_number);
         int guess = int.Parse(guessing);
+        // ONLY IF USER SETS MAGIC NUMBER 👉🏼 int magic_number = int.Parse(set_number); 👈🏼
 
         // LOOP
         while (guess != magic_number)
@@ -34,7 +42,9 @@ class Program
 
             guess = int.Parse(Console.ReadLine());
         }
-
+        
+        Console.WriteLine("");
         Console.WriteLine("YOU GUESSED IT! 😁");
+        Console.WriteLine("");
     }
 }

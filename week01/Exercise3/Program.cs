@@ -4,6 +4,35 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello World! This is the Exercise3 Project.");
+        Console.WriteLine("");
+
+        // USER SETS MAGIC NUMBER
+        Console.Write("Set the magic number: ");
+        string set_number = Console.ReadLine();
+        // USER GUESSES THE NUMBER
+        Console.Write("What is your guess? ");
+        string guessing = Console.ReadLine();
+
+        // CONVERTING INPUT INTO NUMBERS
+        int magic_number = int.Parse(set_number);
+        int guess = int.Parse(guessing);
+
+        // LOOP
+        while (guess != magic_number)
+        {
+            if (guess > magic_number)
+            {
+                Console.Write("Lower: ");
+            }
+
+            else if (guess < magic_number)
+            {
+                Console.Write("Higher: ");
+            }
+
+            guess = int.Parse(Console.ReadLine());
+        }
+
+        Console.WriteLine("YOU GUESSED IT! 😁");
     }
 }

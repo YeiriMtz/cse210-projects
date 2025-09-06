@@ -22,12 +22,14 @@ class Program
         {
             if (guess > magic_number)
             {
-                Console.Write("Lower: ");
+                Console.WriteLine("Lower");
+                Console.Write("What is your guess? ");
             }
 
             else if (guess < magic_number)
             {
-                Console.Write("Higher: ");
+                Console.WriteLine("Higher");
+                Console.Write("What is your guess? ");
             }
 
             guess = int.Parse(Console.ReadLine());

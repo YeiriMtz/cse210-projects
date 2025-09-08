@@ -5,18 +5,18 @@ class Program
     // WELCOME
     static void DisplayWelcome()
     {
-        Console.WriteLine("Welcome to the Program");
+        Console.WriteLine("\nWelcome to the Program");
     }
     // USER'S NAME
     static string PromptUserName()
     {
-        Console.Write("Enter your name: ");
+        Console.Write("\nEnter your name: ");
         return Console.ReadLine();
     }
     // FAV NUMBER
     static int PromptUserNumber()
     {
-        Console.Write("What is your favorite number? ");
+        Console.Write("\nWhat is your favorite number? ");
         return int.Parse(Console.ReadLine());
     }
     // SQUARE NUM
@@ -27,7 +27,7 @@ class Program
     // DISPLAYS
     static void DisplayResult(string name, int squared)
     {
-        Console.WriteLine($"{name}, the square of your favorite number is: {squared}");
+        Console.WriteLine($"\n{name}, the square of your favorite number is: {squared}");
     }
     // MAIN
     static void Main(string[] args)
@@ -39,5 +39,7 @@ class Program
         int squareNumber = SquareNumber(number);
 
         DisplayResult(name, squareNumber);
+        Console.WriteLine("");
     }
+
 }

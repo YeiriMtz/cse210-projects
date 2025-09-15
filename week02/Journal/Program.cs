@@ -33,25 +33,36 @@ class Journal
         }
     }
 
+    // SAVES ENTRIES TO CSV
     public void SaveToFile(string filename)
     {
         using (StreamWriter outputFile = new StreamWriter(filename))
         {
+            // HEADER ROW FOR EXCEL
+            outputFile.WriteLine("Date,Prompt,Response");
+
             foreach (Entry e in _entries)
             {
-                outputFile.WriteLine($"{e.Date} | {e.Prompt} | {e.Response}");
+                string date = EscapeForCsv(e.Date);
+                string prompt = EscapeForCsv(e.Prompt);
+                string response = EscapeForCsv(e.Response);
+
+                outputFile.WriteLine($"{date},{prompt},{response}");
             }
         }
     }
 
+    // LOAD ENTRIES FROM CSV
     public void LoadFromFile(string filename)
     {
         _entries.Clear();
         string[] lines = File.ReadAllLines(filename);
 
-        foreach (string line in lines)
+        for (int i = 1; i < lines.Length; i++)
         {
-            string[] parts = line.Split(" | ");
+            string line = lines[i];
+            string[] parts = ParseCsvLine(line);
+
             if (parts.Length == 3)
             {
                 Entry newEntry = new Entry
@@ -63,6 +74,56 @@ class Journal
                 _entries.Add(newEntry);
             }
         }
+    }
+
+    // HELPERS FOR CSV HANDLING
+    private string EscapeForCsv(string field)
+    {
+        if (field.Contains(",") || field.Contains("\""))
+        {
+            field = field.Replace("\"", "\"\"");
+            return $"\"{field}\"";
+        }
+        return field;
+    }
+
+    private string[] ParseCsvLine(string line)
+    {
+        List<string> fields = new List<string>();
+        bool inQuotes = false;
+        string current = "";
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+
+            if (c == '"')
+            {
+                if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                {
+                    current += '"';
+                    i++;
+                }
+
+                else
+                {
+                    inQuotes = !inQuotes;
+                }
+            }
+
+            else if (c == ',' && !inQuotes)
+            {
+                fields.Add(current);
+                current = "";
+            }
+
+            else
+            {
+                current += c;
+            }
+        }
+        fields.Add(current);
+        return fields.ToArray();
     }
 }
 class Program

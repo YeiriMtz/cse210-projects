@@ -66,4 +66,81 @@ class Journal
     }
 
     class Program
+    {
+        static void Main(string[] args)
+        {
+            Journal journal = new Journal();
+            Random rand = new Random();
+
+            List<string> prompts = new List<string>
+            {
+                 "Who was the most interesting person I interacted with today?",
+                 "What was the best part of my day?",
+                 "How did I see the hand of the Lord in my life today?",
+                 "What was the strongest emotion I felt today?",
+                 "If I had one thing I could do over today, what would it be?"
+            };
+
+            int choice = 0;
+
+            while (choice != 5)
+            {
+                Console.WriteLine("\nJournal Menu");
+                Console.WriteLine("1. Write 🖋️");
+                Console.WriteLine("2. Display 📖");
+                Console.WriteLine("3. Save 💾");
+                Console.WriteLine("4. Load 📂");
+                Console.WriteLine("5. Quit 👋🏼");
+                Console.Write("Choose an option: ");
+
+                string input = Console.ReadLine();
+                int.TryParse(input, out choice);
+
+                switch (choice)
+                {
+                    case 1:
+                        string prompt = prompts[rand.Next(prompts.Count)];
+                        Console.WriteLine(prompt);
+                        Console.Write("> ");
+                        string response = Console.ReadLine();
+
+                        Entry entry = new Entry
+                        {
+                            Date = DateTime.Now.ToShortDateString(),
+                            Prompt = prompt,
+                            Response = response
+                        };
+
+                        journal.AddEntry(entry);
+                        break;
+
+                    case 2:
+                        journal.DisplayAll();
+                        break;
+
+                    case 3:
+                        Console.Write("Enter filename: ");
+                        string saveFile = Console.ReadLine();
+                        journal.SaveToFile(saveFile);
+                        Console.WriteLine("Journal SAVED ✅");
+                        break;
+
+                    case 4:
+                        Console.Write("Enter filename: ");
+                        string loadFile = Console.ReadLine();
+                        journal.LoadFromFile(loadFile);
+                        Console.WriteLine("Journal LOADED ✅");
+                        break;
+
+                    case 5:
+                        Console.WriteLine("Goodbye! 🙋🏻‍♂️");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice, try again");
+                        break;
+                }
+            }
+        }
+    }
 }

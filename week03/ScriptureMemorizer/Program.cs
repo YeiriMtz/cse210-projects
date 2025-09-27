@@ -78,21 +78,23 @@ class Program
     {
         try
         {
-            string[] bookAndVerse = referenceText.Split(' ');
-            string book = bookAndVerse[0];
+            int lastSpace = referenceText.LastIndexOf(' ');
+            if (lastSpace == -1) return null;
 
-            string chapterAndVerse = bookAndVerse[1];
+            string book = referenceText.Substring(0, lastSpace);
+            string chapterAndVerse = referenceText.Substring(lastSpace + 1);
+
             string[] chapterSplit = chapterAndVerse.Split(':');
             int chapter = int.Parse(chapterSplit[0]);
 
-            if (chapterSplit[1].Contains("-"))
+            if (chapterSplit[1].Contains("-")) // verse range
             {
                 string[] verses = chapterSplit[1].Split('-');
                 int startVerse = int.Parse(verses[0]);
                 int endVerse = int.Parse(verses[1]);
                 return new Reference(book, chapter, startVerse, endVerse);
             }
-            else
+            else // single verse
             {
                 int verse = int.Parse(chapterSplit[1]);
                 return new Reference(book, chapter, verse);

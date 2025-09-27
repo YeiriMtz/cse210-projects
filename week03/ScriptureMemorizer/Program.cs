@@ -87,14 +87,14 @@ class Program
             string[] chapterSplit = chapterAndVerse.Split(':');
             int chapter = int.Parse(chapterSplit[0]);
 
-            if (chapterSplit[1].Contains("-")) // verse range
+            if (chapterSplit[1].Contains("-"))
             {
                 string[] verses = chapterSplit[1].Split('-');
                 int startVerse = int.Parse(verses[0]);
                 int endVerse = int.Parse(verses[1]);
                 return new Reference(book, chapter, startVerse, endVerse);
             }
-            else // single verse
+            else
             {
                 int verse = int.Parse(chapterSplit[1]);
                 return new Reference(book, chapter, verse);

@@ -41,7 +41,7 @@ class Program
         Console.WriteLine("\nAll words are hidden. Program ended.");
     }
 
-    // Loads scriptures from a file
+    // -------- LOAD SCRIPTURES FROM THE SCRIPTURES.TXT FILE --------- EXCEEDING REQUIREMENTS -----------
     static List<Scripture> LoadScripturesFromFile(string filename)
     {
         List<Scripture> scriptures = new List<Scripture>();

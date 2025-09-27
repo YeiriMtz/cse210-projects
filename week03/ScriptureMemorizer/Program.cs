@@ -1,28 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 class Program
 {
     static void Main(string[] args)
     {
-        List<Scripture> scriptures = new List<Scripture>();
+        // Load scriptures from the file
+        List<Scripture> scriptures = LoadScripturesFromFile("scriptures.txt");
 
-        // Scripture 1 
-        Reference ref1 = new Reference("John", 3, 16);
-        string text1 = "For God so loved the world that He gave His only Son, that whoever believes in Him shall not perish but have eternal life.";
-        scriptures.Add(new Scripture(ref1, text1));
+        if (scriptures.Count == 0)
+        {
+            Console.WriteLine("No scriptures found. Program ended.");
+            return;
+        }
 
-        // Scripture 2 
-        Reference ref2 = new Reference("1 Nephi", 3, 7);
-        string text2 = "And it came to pass that I, Nephi, said unto my father: I will go and do the things which the Lord hath commanded, for I know that the Lord giveth no commandments unto the children of men, save he shall prepare a way for them that they may accomplish the thing which he commandeth them.";
-        scriptures.Add(new Scripture(ref2, text2));
-
-        // Scripture 3 
-        Reference ref3 = new Reference("D & C", 14, 7);
-        string text3 = "And, if you keep my commandments and endure to the end you shall have eternal life, which gift is the greatest of all the gifts of God.";
-        scriptures.Add(new Scripture(ref3, text3));
-
-        // Let the user select a scripture
+        // Let user select a scripture
         Scripture selectedScripture = SelectScripture(scriptures);
         if (selectedScripture == null)
         {
@@ -40,12 +33,76 @@ class Program
             if (input.ToLower() == "quit")
                 break;
 
-            selectedScripture.HideRandomWords(3);
+            selectedScripture.HideRandomWords(3); // hides 3 words at a time
         }
 
         Console.Clear();
         Console.WriteLine(selectedScripture.GetDisplayText());
         Console.WriteLine("\nAll words are hidden. Program ended.");
+    }
+
+    // Loads scriptures from a file
+    static List<Scripture> LoadScripturesFromFile(string filename)
+    {
+        List<Scripture> scriptures = new List<Scripture>();
+
+        if (!File.Exists(filename))
+        {
+            Console.WriteLine($"File {filename} not found.");
+            return scriptures;
+        }
+
+        string[] lines = File.ReadAllLines(filename);
+
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            string[] parts = line.Split('|');
+            if (parts.Length != 2) continue;
+
+            string referenceText = parts[0].Trim();
+            string scriptureText = parts[1].Trim();
+
+            Reference reference = ParseReference(referenceText);
+            if (reference != null)
+            {
+                scriptures.Add(new Scripture(reference, scriptureText));
+            }
+        }
+
+        return scriptures;
+    }
+
+    static Reference ParseReference(string referenceText)
+    {
+        try
+        {
+            string[] bookAndVerse = referenceText.Split(' ');
+            string book = bookAndVerse[0];
+
+            string chapterAndVerse = bookAndVerse[1];
+            string[] chapterSplit = chapterAndVerse.Split(':');
+            int chapter = int.Parse(chapterSplit[0]);
+
+            if (chapterSplit[1].Contains("-"))
+            {
+                string[] verses = chapterSplit[1].Split('-');
+                int startVerse = int.Parse(verses[0]);
+                int endVerse = int.Parse(verses[1]);
+                return new Reference(book, chapter, startVerse, endVerse);
+            }
+            else
+            {
+                int verse = int.Parse(chapterSplit[1]);
+                return new Reference(book, chapter, verse);
+            }
+        }
+        catch
+        {
+            Console.WriteLine($"Failed to parse reference: {referenceText}");
+            return null;
+        }
     }
 
     static Scripture SelectScripture(List<Scripture> scriptures)
